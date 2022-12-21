@@ -24,6 +24,17 @@ node {
         checkout scm
     }
 
+    stage('Test') {
+        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
+    }
+
+    stage('Store Test Results') {
+        junit(
+                allowEmptyResults: true,
+                testResults: '**/target/surefire-reports/TEST-*.xml'
+        )
+    }
+
     stage('Build') {
         sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
     }
