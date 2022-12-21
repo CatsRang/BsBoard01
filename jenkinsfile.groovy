@@ -23,14 +23,7 @@ node {
         // Get some code from a Git repository
         checkout scm
     }
-    if (skipTests != true) {
-        stage('Test') {
-            sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
-        }
-        stage('Store Test Results') {
-            junit '**/target/surefire-reports/TEST-*.xml'
-        }
-    }
+
     stage('Build') {
         sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
     }
