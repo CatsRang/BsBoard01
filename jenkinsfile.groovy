@@ -26,22 +26,13 @@ node {
     }
 
     stage('Test') {
-        when {
-            expression {
-                params.skipTests == true
-            }
-        }
         steps {
             sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
         }
     }
 
     stage('Store Test Results') {
-        when {
-            expression {
-                params.skipTests == true
-            }
-        } steps {
+        steps {
             junit(
                     allowEmptyResults: true,
                     testResults: '**/target/surefire-reports/TEST-*.xml'
