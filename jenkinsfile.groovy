@@ -19,28 +19,44 @@ node {
         // **       in the global configuration.
         mvnHome = tool 'MavenM3'
     }
+
     stage('Checkout') {
         // Get some code from a Git repository
         checkout scm
     }
 
     stage('Test') {
-        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
+        when {
+            expression {
+                params.skipTests == true
+            }
+            steps {
+                sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
+            }
+        }
     }
 
     stage('Store Test Results') {
-        junit(
-                allowEmptyResults: true,
-                testResults: '**/target/surefire-reports/TEST-*.xml'
-        )
+        when {
+            expression {
+                params.skipTests == true
+            }
+        } steps {
+            junit(
+                    allowEmptyResults: true,
+                    testResults: '**/target/surefire-reports/TEST-*.xml'
+            )
+        }
     }
 
     stage('Build') {
         sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
     }
+
     stage('Archive') {
         archive '**/target/*.jar'
     }
+
     stage('Deploy') {
         echo "Deploy is not yet implemented"
     }
