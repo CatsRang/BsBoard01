@@ -30,9 +30,9 @@ node {
             expression {
                 params.skipTests == true
             }
-            steps {
-                sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
-            }
+        }
+        steps {
+            sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
         }
     }
 
