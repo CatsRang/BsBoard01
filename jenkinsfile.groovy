@@ -26,18 +26,14 @@ node {
     }
 
     stage('Test') {
-        steps {
-            sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
-        }
+        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
     }
 
     stage('Store Test Results') {
-        steps {
-            junit(
-                    allowEmptyResults: true,
-                    testResults: '**/target/surefire-reports/TEST-*.xml'
-            )
-        }
+        junit(
+                allowEmptyResults: true,
+                testResults: '**/target/surefire-reports/TEST-*.xml'
+        )
     }
 
     stage('Build') {
