@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- configuration file for LogBack (slf4J implementation)
+See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-through-the-java-loggers/ -->
+<configuration scan="true" scanPeriod="30 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{MM-dd HH:mm:ss.SSS} %.-1level|%-30.30logger{30} :%4line | %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT-SQL" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>---------------------------------%n%d{MM-dd HH:mm:ss.SSS}:::%n%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application Log -->
+    <logger name="com.bs" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Error Log -->
+    <logger name="errorLogger" additivity="false">
+        <level value="error" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Process Check Log -->
+    <logger name="processCheckLogger" additivity="false">
+        <level value="info" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Common framework Log -->
+    <logger name="org.springframework">
+        <level value="warn" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.apache.commons">
+        <level value="warn" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.apache.catalina">
+        <level value="warn" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.springframework.aop.framework.CglibAopProxy">
+        <level value="error" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Quartz scheduler -->
+    <logger name="org.quartz" additivity="false">
+        <level value="info" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Cache Log -->
+    <logger name="redis.clients" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- DB Log -->
+    <logger name="org.springframework.jdbc" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+    <logger name="org.springframework.data" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="org.mybatis.spring.SqlSessionUtils" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="org.apache.ibatis.io.ResolverUtil" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="log4jdbc.debug" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.connection" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.resultsettable" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.sqlonly" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.audit" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.resultset" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="jdbc.sqltiming" additivity="false">
+        <level value="warn" />
+        <appender-ref ref="STDOUT-SQL" />
+    </logger>
+
+    <logger name="LogLevelLogger" additivity="false">
+        <level value="info" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
