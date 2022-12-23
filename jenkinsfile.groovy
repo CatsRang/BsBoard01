@@ -53,11 +53,10 @@ node {
     stage('Push Docker Image') {
         docker.withRegistry('http://127.0.0.1:5000') {
             app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
         }
     }
 
-    stage('Deploy') {
-        echo "Deploy is not yet implemented"
+    stage('Kubernetes Deploy') {
+        kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
     }
 }

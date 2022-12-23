@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bsboard-b01
+  labels:
+    app: bsboard-b01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bsboard-b01
+  template:
+    metadata:
+      labels:
+        app: bsboard-b01
+    spec:
+      containers:
+        - name: bsboard-b01
+          image: 127.0.0.1:5000/phis/pqm-api:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-service
+spec:
+  type: NodePort
+  selector:
+    app: bsboard-b01
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30000
