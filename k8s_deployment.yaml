@@ -17,6 +17,7 @@ spec:
       containers:
         - name: bsboard-b01
           image: docker-registry:5000/phis/pqm-api:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 ---
