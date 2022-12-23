@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bsboard-b01
-          image: 127.0.0.1:5000/phis/pqm-api:latest
+          image: minikube:5000/phis/pqm-api:latest
           ports:
             - containerPort: 8080
 ---
