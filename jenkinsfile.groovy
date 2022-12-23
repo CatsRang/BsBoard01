@@ -51,7 +51,7 @@ node {
     }
 
     stage('Push Docker Image') {
-        docker.withRegistry('http://192.168.49.4:5000') {
+        docker.withRegistry('http://host.docker.internal:5000') {
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
