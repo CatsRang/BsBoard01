@@ -1,3 +1,4 @@
+
 node {
     // Jenkins 파일에서 취급하는 파라미터들을 미리 정의한다.
     // 아래와 같이 미리 정의하면 Jenkins Job 이 Parametrized Job 이 되며 기본 변수들이 들어가게 된다
@@ -11,6 +12,7 @@ node {
                     ]])
 
     def mvnHome
+    def app
 
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
@@ -25,23 +27,27 @@ node {
         checkout scm
     }
 
-    stage('Test') {
-        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
-    }
+//    stage('Test') {
+//        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
+//    }
+//
+//    stage('Store Test Results') {
+//        junit(
+//                allowEmptyResults: true,
+//                testResults: '** /target/surefire-reports/TEST-*.xml'
+//        )
+//    }
 
-    stage('Store Test Results') {
-        junit(
-                allowEmptyResults: true,
-                testResults: '**/target/surefire-reports/TEST-*.xml'
-        )
-    }
-
-    stage('Build') {
+    stage('Build Package') {
         sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
     }
 
     stage('Archive') {
         archive '**/target/*.jar'
+    }
+
+    stage('Build Docker Image') {
+        app = docker.build("phis/pqm-api")
     }
 
     stage('Deploy') {
