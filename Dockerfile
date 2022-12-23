@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-alpine
 
 ARG JAR_FILE=target/BsBoard-*.jar
 COPY ${JAR_FILE} app.jar
