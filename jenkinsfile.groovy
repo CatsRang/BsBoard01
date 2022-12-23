@@ -50,6 +50,13 @@ node {
         app = docker.build("phis/pqm-api")
     }
 
+    stage('Push Docker Image') {
+        docker.withRegistry('localhost:5000') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
+
     stage('Deploy') {
         echo "Deploy is not yet implemented"
     }
