@@ -51,7 +51,7 @@ node {
     }
 
     stage('Push Docker Image') {
-        docker.withRegistry('http://minikube:5000') {
+        docker.withRegistry('http://docker-registry:5000') {
             app.push("${env.BUILD_NUMBER}")
         }
     }
