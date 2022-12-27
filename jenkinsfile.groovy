@@ -14,6 +14,10 @@ node {
     def mvnHome
     def app
 
+    tools {
+        docker 'docker-phis'
+    }
+
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
         mvnHome = tool 'MavenM3'
