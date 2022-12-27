@@ -14,6 +14,13 @@ node {
     def mvnHome
     def app
 
+    agent {
+        kubernetes {
+            defaultContainer 'jnlp'
+            yamlFile 'agentpod.yaml'
+        }
+    }
+
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
         mvnHome = tool 'MavenM3'
@@ -40,7 +47,6 @@ node {
                 maven: 'MavenM3',
                 mavenSettingsConfig: 'global-settings-phis'
         ) {
-            // sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean package"
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
     }
