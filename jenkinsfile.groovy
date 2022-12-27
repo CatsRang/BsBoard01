@@ -36,12 +36,8 @@ node {
 //    }
 
     stage('Build Package') {
-        //sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
-
         withMaven(
-                // Maven installation declared in the Jenkins "Global Tool Configuration"
                 maven: 'MavenM3',
-//                mavenLocalRepo: '/bitnami/jenkins/home/.m2',
                 mavenSettingsConfig: 'global-settings-phis'
         ) {
             // sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean package"
@@ -50,7 +46,7 @@ node {
     }
 
     stage('Archive') {
-        archive '**/target/*.jar'
+        archiveArtifacts artifacts: '**/target/*.jar'
     }
 
     stage('Build Docker Image') {
