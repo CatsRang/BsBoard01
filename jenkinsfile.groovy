@@ -16,9 +16,6 @@ node {
 
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
-        // Get the Maven tool.
-        // ** NOTE: This 'M3' Maven tool must be configured
-        // **       in the global configuration.
         mvnHome = tool 'MavenM3'
     }
 
@@ -39,15 +36,18 @@ node {
 //    }
 
     stage('Build Package') {
+        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
+
+        /*
         withMaven(
                 // Maven installation declared in the Jenkins "Global Tool Configuration"
                 maven: 'MavenM3',
                 //mavenLocalRepo: '.repository',
                 mavenSettingsConfig: 'maven-settings-phis'
         ) {
-            // Run the maven build
-            sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean install"
+            sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
+         */
     }
 
     stage('Archive') {
