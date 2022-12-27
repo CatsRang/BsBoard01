@@ -57,7 +57,8 @@ node {
 
     stage('Build Docker Image') {
         container('docker') {
-            app = docker.build("phis/pqm-api")
+            //app = docker.build("phis/pqm-api")
+            sh "docker build -t phis/pqm-api ."
         }
     }
 
