@@ -41,8 +41,8 @@ node {
         withMaven(
                 // Maven installation declared in the Jenkins "Global Tool Configuration"
                 maven: 'MavenM3',
-                mavenLocalRepo: '/bitnami/jenkins/home/.m2',
-                mavenSettingsConfig: 'maven-settings-phis'
+//                mavenLocalRepo: '/bitnami/jenkins/home/.m2',
+ //               mavenSettingsConfig: 'maven-settings-phis'
         ) {
             sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
