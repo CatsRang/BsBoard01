@@ -56,8 +56,16 @@ node {
     }
 
     stage('Build Docker Image') {
+        container('docker') {
+            app = docker.build("phis/pqm-api")
+        }
+    }
+
+    /*
+    stage('Build Docker Image') {
         app = docker.build("phis/pqm-api")
     }
+     */
 
     stage('Push Docker Image') {
         docker.withRegistry('http://docker-registry:5000') {
