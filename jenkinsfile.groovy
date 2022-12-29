@@ -66,7 +66,7 @@ node {
 
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
-        sh "podman build -t phis/pqm-api ."
+        sh "podman --storage-driver=vfs build -t phis/pqm-api ."
     }
 
     stage('Push Docker Image') {
