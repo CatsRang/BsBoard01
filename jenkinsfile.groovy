@@ -63,6 +63,7 @@ stage('Build Docker Image') {
 }
  */
 
+    /*
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
         sh 'sudo podman login  http://phis.harbor.io -u admin -p Harbor12345'
@@ -71,24 +72,9 @@ stage('Build Docker Image') {
         sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
         sh "sudo podman logout  http://phis.harbor.io"
     }
+     */
 
     /*
-    stage('Login-Into-Docker') {
-        steps {
-            container('docker') {
-                sh 'docker login  http://phis.harbor.io -u admin -p Harbor12345'
-                sh 'sudo podman login  http://phis.harbor.io -u admin -p Harbor12345'
-            }
-        }
-    }
-    stage('Push-Images-Docker-to-DockerHub') {
-        steps {
-            container('docker') {
-                sh 'docker push --events-backend=file phis.harbor.io/pqmtest/hello-world2:latest'
-            }
-        }
-    }
-
     stage('Push Docker Image') {
         docker.withRegistry('http://docker-registry:5000') {
             app.push("${env.BUILD_NUMBER}")
@@ -98,7 +84,7 @@ stage('Build Docker Image') {
      */
 
     stage('Kubernetes Deploy') {
-        withKubeConfig([credentialsId: 'kubernetes']) {
+        withKubeConfig([credentialsId: 'kubernetes001']) {
             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
             sh 'chmod u+x ./kubectl'
             sh "./kubectl delete deployment bsboard-b01 -n pqmtest"
