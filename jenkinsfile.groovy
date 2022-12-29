@@ -66,7 +66,7 @@ node {
 
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
-        sh "sudo podman build -t phis/pqm-api ."
+        sh "sudo podman build --events-backend=file -t phis/pqm-api ."
     }
 
     stage('Push Docker Image') {
