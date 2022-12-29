@@ -69,7 +69,7 @@ stage('Build Docker Image') {
         sh "sudo podman build --events-backend=file -t pqmtest/pqm-api ."
         sh "sudo podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
         sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
-        sh "sudo podman logout"
+        sh "sudo podman logout  http://phis.harbor.io"
     }
 
     /*
