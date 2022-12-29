@@ -66,7 +66,7 @@ node {
 
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
-        sh "podman build -t phis/pqm-api ."
+        sh "podman build --runroot=/var/run/podman/storage -t phis/pqm-api ."
     }
 
     stage('Push Docker Image') {
