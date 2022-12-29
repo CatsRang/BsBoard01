@@ -14,13 +14,16 @@ node {
     def mvnHome
     def app
 
+    /*
     tools {
         docker 'docker-phis'
     }
+    */
 
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
         mvnHome = tool 'MavenM3'
+        docker = tool 'docker-phis'
     }
 
     stage('Checkout') {
@@ -62,7 +65,8 @@ node {
      */
 
     stage('Build Docker Image') {
-        app = docker.build("phis/pqm-api")
+        //app = docker.build("phis/pqm-api")
+        sh "podman build -t phis/pqm-api ."
     }
 
     stage('Push Docker Image') {
