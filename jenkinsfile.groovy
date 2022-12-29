@@ -65,17 +65,9 @@ stage('Build Docker Image') {
 
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
+        sh 'sudo podman login  http://phis.harbor.io -u admin -p Harbor12345'
         sh "sudo podman build --events-backend=file -t pqmtest/pqm-api ."
         sh "sudo podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
-    }
-
-    stage('Push Docker Image') {
-        //app = docker.build("phis/pqm-api")
-        sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
-    }
-
-    stage('Push Docker Image') {
-        //app = docker.build("phis/pqm-api")
         sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
         sh "sudo podman logout"
     }
