@@ -20,16 +20,18 @@ node {
     }
     */
 
-    stage('Preparation') { // for display purposes
-        echo "Current workspace : ${workspace}"
-        mvnHome = tool 'MavenM3'
-        docker = tool 'docker-phis'
-    }
+    stages {
 
-    stage('Checkout') {
-        // Get some code from a Git repository
-        checkout scm
-    }
+        stage('Preparation') { // for display purposes
+            echo "Current workspace : ${workspace}"
+            mvnHome = tool 'MavenM3'
+            docker = tool 'docker-phis'
+        }
+
+        stage('Checkout') {
+            // Get some code from a Git repository
+            checkout scm
+        }
 
 //    stage('Test') {
 //        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
@@ -42,20 +44,20 @@ node {
 //        )
 //    }
 
-    stage('Build Package') {
-        withMaven(
-                maven: 'MavenM3',
-                mavenSettingsConfig: 'global-settings-phis'
-        ) {
-            sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
+        stage('Build Package') {
+            withMaven(
+                    maven: 'MavenM3',
+                    mavenSettingsConfig: 'global-settings-phis'
+            ) {
+                sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
+            }
         }
-    }
 
-    stage('Archive') {
-        archiveArtifacts artifacts: '**/target/*.jar'
-    }
+        stage('Archive') {
+            archiveArtifacts artifacts: '**/target/*.jar'
+        }
 
-    /*
+        /*
     stage('Build Docker Image') {
         container('docker') {
             //app = docker.build("phis/pqm-api")
@@ -64,25 +66,50 @@ node {
     }
      */
 
-    stage('Build Docker Image') {
-        //app = docker.build("phis/pqm-api")
-        sh "sudo podman build --events-backend=file -t phis/pqm-api ."
-    }
+        stage('Build Docker Image') {
+            //app = docker.build("phis/pqm-api")
+            sh "sudo podman build --events-backend=file -t phis/pqm-api ."
+        }
 
-    stage('Push Docker Image') {
-        docker.withRegistry('http://docker-registry:5000') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+        stage('Login-Into-Docker') {
+            steps {
+                container('docker') {
+                    sh 'docker login  http://phis.harbor.io -u admin -p Harbor12345'
+                }
+            }
+        }
+        stage('Push-Images-Docker-to-DockerHub') {
+            steps {
+                container('docker') {
+                    sh 'docker push phis.harbor.io/pqmtest/hello-world2:latest'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            docker.withRegistry('http://docker-registry:5000') {
+                app.push("${env.BUILD_NUMBER}")
+                app.push("latest")
+            }
+        }
+
+        stage('Kubernetes Deploy') {
+            withKubeConfig([credentialsId: 'minikube_config']) {
+                sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+                sh 'chmod u+x ./kubectl'
+                sh "./kubectl delete deployment bsboard-b01"
+                sh "./kubectl apply -f k8s_deployment.yaml"
+                //kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
+            }
         }
     }
 
-    stage('Kubernetes Deploy') {
-        withKubeConfig([credentialsId: 'minikube_config']) {
-            sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-            sh 'chmod u+x ./kubectl'
-            sh "./kubectl delete deployment bsboard-b01"
-            sh "./kubectl apply -f k8s_deployment.yaml"
-            //kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
+    post {
+        always {
+            container('docker') {
+                sh 'docker logout'
+            }
         }
     }
+
 }
