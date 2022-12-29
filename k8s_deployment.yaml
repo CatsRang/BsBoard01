@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bsboard-b01
+  namespace: pqmtest
   labels:
     app: bsboard-b01
 spec:

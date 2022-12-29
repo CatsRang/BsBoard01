@@ -77,6 +77,7 @@ stage('Build Docker Image') {
     stage('Push Docker Image') {
         //app = docker.build("phis/pqm-api")
         sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
+        sh "sudo podman logout"
     }
 
     /*
@@ -104,15 +105,13 @@ stage('Build Docker Image') {
     }
      */
 
-    /*
     stage('Kubernetes Deploy') {
         withKubeConfig([credentialsId: 'minikube_config']) {
             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
             sh 'chmod u+x ./kubectl'
-            sh "./kubectl delete deployment bsboard-b01"
+            sh "./kubectl delete deployment bsboard-b01 -n pqmtest"
             sh "./kubectl apply -f k8s_deployment.yaml"
             //kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
         }
     }
-     */
 }
