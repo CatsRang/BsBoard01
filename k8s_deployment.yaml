@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bsboard-b01
-          image: docker-registry:5000/phis/pqm-api:latest
+          image: phis.harbor.io/pqmtest/pqm-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: example-service
+  name: pqm-api-service
 spec:
   type: NodePort
   selector:
