@@ -68,20 +68,28 @@ node {
 
         stage('Build Docker Image') {
             //app = docker.build("phis/pqm-api")
-            sh "sudo podman build --events-backend=file -t phis/pqm-api ."
+            sh "sudo podman build --events-backend=file -t pqmtest/pqm-api ."
+            sh "sudo podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
         }
 
+        stage('Push Docker Image') {
+            //app = docker.build("phis/pqm-api")
+            sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
+        }
+
+        /*
         stage('Login-Into-Docker') {
             steps {
                 container('docker') {
                     sh 'docker login  http://phis.harbor.io -u admin -p Harbor12345'
+                    sh 'sudo podman login  http://phis.harbor.io -u admin -p Harbor12345'
                 }
             }
         }
         stage('Push-Images-Docker-to-DockerHub') {
             steps {
                 container('docker') {
-                    sh 'docker push phis.harbor.io/pqmtest/hello-world2:latest'
+                    sh 'docker push --events-backend=file phis.harbor.io/pqmtest/hello-world2:latest'
                 }
             }
         }
@@ -92,6 +100,7 @@ node {
                 app.push("latest")
             }
         }
+         */
 
         stage('Kubernetes Deploy') {
             withKubeConfig([credentialsId: 'minikube_config']) {
