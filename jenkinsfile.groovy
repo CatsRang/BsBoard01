@@ -38,7 +38,7 @@ node {
 
     stage('Push Docker Image') {
         docker.withRegistry(dockerRegistry, registryCredential) {
-            app.push("${env.BUILD_NUMBER}")
+            //app.push("${env.BUILD_NUMBER}")
             app.push("latest");
         }
     }
