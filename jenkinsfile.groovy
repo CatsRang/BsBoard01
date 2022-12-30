@@ -22,7 +22,6 @@ node {
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
         mvnHome = tool 'MavenM3'
-        docker = tool 'docker-phis'
     }
 
     stage('Checkout') {
