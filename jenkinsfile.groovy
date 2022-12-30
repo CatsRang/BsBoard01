@@ -46,15 +46,13 @@ node {
         archiveArtifacts artifacts: '**/target/*.jar'
     }
 
-    /*
-stage('Build Docker Image') {
-    container('docker') {
-        //app = docker.build("phis/pqm-api")
-        sh "docker build -t phis/pqm-api ."
+    stage('Build Docker Image') {
+        container('docker') {
+            app = docker.build("pqmtest/pqm-api")
+        }
     }
-}
- */
 
+    /*
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
         sh 'podman login  http://phis.harbor.io -u admin -p Harbor12345'
@@ -63,6 +61,7 @@ stage('Build Docker Image') {
         sh "podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
         sh "podman logout  http://phis.harbor.io"
     }
+     */
 
     /*
     stage('Push Docker Image') {
