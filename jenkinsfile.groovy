@@ -47,9 +47,7 @@ node {
     }
 
     stage('Build Docker Image') {
-        container('docker') {
-            app = docker.build("pqmtest/pqm-api")
-        }
+        app = docker.build("pqmtest/pqm-api")
     }
 
     /*
