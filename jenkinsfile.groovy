@@ -3,7 +3,7 @@ node {
             [
                     [$class: 'ParametersDefinitionProperty', parameterDefinitions:
                             [
-                                    [$class: 'StringParameterDefinition', defaultValue: 'development', description: 'Maven Profile ( Dev | Prd )', name: 'activeProfile'],
+                                    [$class: 'ChoiceParameterDefinition', choices: ['dev', 'prd'], name: 'activeProfile'],
                                     [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Regstry Url', name:"dockerRegistry"],
                                     [$class: 'StringParameterDefinition', defaultValue: 'harbor-phis', description: 'Regstry Credential', name:"registryCred"],
                             ]
