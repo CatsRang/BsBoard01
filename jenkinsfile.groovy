@@ -50,6 +50,12 @@ node {
         app = docker.build("pqmtest/pqm-api")
     }
 
+    stage('Push Docker Image') {
+        docker.withRegistry('http://phis.harbor.io') {
+            app.push("${env.BUILD_NUMBER}")
+        }
+    }
+
     /*
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
