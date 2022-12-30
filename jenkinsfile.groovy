@@ -47,7 +47,5 @@ node {
         withKubeConfig([credentialsId: 'kube-secret']) {
             sh "./kubectl apply -f k8s_deployment.yaml"
         }
-
-        //kubernetesDeploy(configs: "k8s_deployment.yaml", kubeconfigId: "kube-config")
     }
 }
