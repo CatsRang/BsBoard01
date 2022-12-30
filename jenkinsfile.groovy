@@ -55,16 +55,14 @@ stage('Build Docker Image') {
 }
  */
 
-    /*
     stage('Build Docker Image') {
         //app = docker.build("phis/pqm-api")
-        sh 'sudo podman login  http://phis.harbor.io -u admin -p Harbor12345'
-        sh "sudo podman build --events-backend=file -t pqmtest/pqm-api ."
-        sh "sudo podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
-        sh "sudo podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
-        sh "sudo podman logout  http://phis.harbor.io"
+        sh 'podman login  http://phis.harbor.io -u admin -p Harbor12345'
+        sh "podman build --events-backend=file -t pqmtest/pqm-api ."
+        sh "podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
+        sh "podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
+        sh "podman logout  http://phis.harbor.io"
     }
-     */
 
     /*
     stage('Push Docker Image') {
@@ -75,6 +73,7 @@ stage('Build Docker Image') {
     }
      */
 
+    /*
     stage('Kubernetes Deploy') {
         withKubeConfig([credentialsId: 'kube_config']) {
             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
@@ -84,4 +83,5 @@ stage('Build Docker Image') {
             //kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
         }
     }
+     */
 }
