@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bsboard-b01
-          image: phis.harbor.io/pqmtest/pqm-api:latest
+          image: bless2k/pqm-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
