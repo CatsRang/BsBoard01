@@ -26,6 +26,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pqm-api-service
+  namespace: pqmtest
 spec:
   type: NodePort
   selector:
