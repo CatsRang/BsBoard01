@@ -35,7 +35,9 @@ node {
 //    }
 
     stage('Build Package') {
-        withMaven {
+        withMaven(
+                maven: 'MavenM3'
+        ) {
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
     }
