@@ -1,6 +1,4 @@
 node {
-    // Jenkins 파일에서 취급하는 파라미터들을 미리 정의한다.
-    // 아래와 같이 미리 정의하면 Jenkins Job 이 Parametrized Job 이 되며 기본 변수들이 들어가게 된다
     properties(
             [
                     [$class: 'ParametersDefinitionProperty', parameterDefinitions:
@@ -19,20 +17,8 @@ node {
     }
 
     stage('Checkout') {
-        // Get some code from a Git repository
         checkout scm
     }
-
-//    stage('Test') {
-//        sh "'${mvnHome}/bin/mvn' -P ${activeProfile} -Dmaven.test.failure.ignore -B verify"
-//    }
-//
-//    stage('Store Test Results') {
-//        junit(
-//                allowEmptyResults: true,
-//                testResults: '** /target/surefire-reports/TEST-*.xml'
-//        )
-//    }
 
     stage('Build Package') {
         withMaven(
@@ -51,7 +37,7 @@ node {
     }
 
     stage('Push Docker Image') {
-        docker.withRegistry('http://phis.harbor.io') {
+        docker.withRegistry('http://phis.harbor.io', 'harbor-phis') {
             app.push("${env.BUILD_NUMBER}")
         }
     }
