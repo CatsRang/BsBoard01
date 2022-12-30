@@ -4,8 +4,9 @@ node {
                     [$class: 'ParametersDefinitionProperty', parameterDefinitions:
                             [
                                     [$class: 'ChoiceParameterDefinition', description:'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
-                                    [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Regstry Url', name:"dockerRegistry"],
-                                    [$class: 'StringParameterDefinition', defaultValue: 'harbor-phis', description: 'Regstry Credential', name:"registryCred"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Registry Url', name:"dockerRegistry"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'harbor-phis', description: 'Registry Credential', name:"registryCredential"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'pqmtest/pqm-api', description: 'Docker Image Name', name:"dockerImageName"]
                             ]
                     ]])
 
@@ -34,7 +35,7 @@ node {
     }
 
     stage('Build Docker Image') {
-        app = docker.build("pqmtest/pqm-api")
+        app = docker.build(dockerImageName)
     }
 
     stage('Push Docker Image') {
