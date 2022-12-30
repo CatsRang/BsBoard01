@@ -38,13 +38,14 @@ node {
 
     stage('Push Docker Image') {
         docker.withRegistry(dockerRegistry, registryCredential) {
-            //app.push("${env.BUILD_NUMBER}")
-            app.push("latest");
+            app.push("${env.BUILD_NUMBER}")
+            //app.push("latest");
         }
     }
 
     stage('Kubernetes Deploy') {
         withKubeConfig([credentialsId: 'kube-secret']) {
+            sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
             sh "./kubectl apply -f k8s_deployment.yaml"
         }
     }
