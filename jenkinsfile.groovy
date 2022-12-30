@@ -44,6 +44,6 @@ node {
     }
 
     stage('Kubernetes Deploy') {
-        kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kube-config")
+        kubernetesDeploy(configs: "k8s_deployment.yaml", kubeconfigId: "kube-config")
     }
 }
