@@ -3,8 +3,9 @@ node {
             [
                     [$class: 'ParametersDefinitionProperty', parameterDefinitions:
                             [
-                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '테스트를 Skip 할 수 있습니다. 선택 시 테스트를 건너뛰고 체크아웃 - 빌드 - 아카이빙만 진행합니다', name: 'skipTests']
-                                    , [$class: 'StringParameterDefinition', defaultValue: 'development', description: 'Maven에서 Active 할 Profile 을 입력하세요. 예) production', name: 'activeProfile']
+                                    [$class: 'StringParameterDefinition', defaultValue: 'development', description: 'Maven Profile ( Dev | Prd )', name: 'activeProfile'],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Regstry Url', name:"dockerRegistry"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'harbor-phis', description: 'Regstry Credential', name:"registryCred"],
                             ]
                     ]])
 
@@ -37,7 +38,7 @@ node {
     }
 
     stage('Push Docker Image') {
-        docker.withRegistry('http://phis.harbor.io', 'harbor-phis') {
+        docker.withRegistry(dockerRegistry, registryCred) {
             app.push("${env.BUILD_NUMBER}")
         }
     }
