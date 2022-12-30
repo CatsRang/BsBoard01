@@ -4,9 +4,9 @@ node {
                     [$class: 'ParametersDefinitionProperty', parameterDefinitions:
                             [
                                     [$class: 'ChoiceParameterDefinition', description: 'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
-                                    [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Registry Url. ex) https://registry.hub.docker.com', name: "dockerRegistry"],
-                                    [$class: 'StringParameterDefinition', defaultValue: 'harbor-phis', description: 'Registry Credential', name: "registryCredential"],
-                                    [$class: 'StringParameterDefinition', defaultValue: 'pqmtest/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
+                                    [$class: 'StringParameterDefinition', defaultValue: 'https://registry.hub.docker.com', description: 'Registry Url. ex) http://phis.harbor.io  https://registry.hub.docker.com', name: "dockerRegistry"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'dockerhub-bless2k', description: 'Registry Credential', name: "registryCredential"],
+                                    [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
                             ]
                     ]])
 
@@ -44,6 +44,6 @@ node {
     }
 
     stage('Kubernetes Deploy') {
-        kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kubernetes")
+        kubernetesDeploy(configs: "k8s_deployment.yml", kubeconfigId: "kube-config")
     }
 }
