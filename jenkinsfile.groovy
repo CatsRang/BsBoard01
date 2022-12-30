@@ -10,12 +10,10 @@ node {
                             ]
                     ]])
 
-    def mvnHome
     def app
 
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
-        mvnHome = tool 'MavenM3'
     }
 
     stage('Checkout') {
@@ -43,26 +41,6 @@ node {
             app.push("${env.BUILD_NUMBER}")
         }
     }
-
-    /*
-    stage('Build Docker Image') {
-        //app = docker.build("phis/pqm-api")
-        sh 'podman login  http://phis.harbor.io -u admin -p Harbor12345'
-        sh "podman build --events-backend=file -t pqmtest/pqm-api ."
-        sh "podman tag --events-backend=file localhost/pqmtest/pqm-api:latest phis.harbor.io/pqmtest/pqm-api:latest"
-        sh "podman push --events-backend=file phis.harbor.io/pqmtest/pqm-api:latest"
-        sh "podman logout  http://phis.harbor.io"
-    }
-     */
-
-    /*
-    stage('Push Docker Image') {
-        docker.withRegistry('http://docker-registry:5000') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
-    }
-     */
 
     /*
     stage('Kubernetes Deploy') {
