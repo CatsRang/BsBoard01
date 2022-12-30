@@ -13,12 +13,6 @@ node {
     def mvnHome
     def app
 
-    /*
-    tools {
-        docker 'docker-phis'
-    }
-    */
-
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
         mvnHome = tool 'MavenM3'
@@ -42,8 +36,7 @@ node {
 
     stage('Build Package') {
         withMaven(
-                maven: 'MavenM3',
-                mavenSettingsConfig: 'global-settings-phis'
+                maven: 'MavenM3'
         ) {
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
