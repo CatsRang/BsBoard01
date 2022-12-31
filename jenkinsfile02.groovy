@@ -1,12 +1,16 @@
 properties([parameters([
         choice(choices: ['dev', 'prod'], name: 'activeProfile', description: 'Maven Active Profile'),
-        choice(choices: ['https://registry.hub.docker.comhttps://registry.hub.docker.com', 'http://phis.harbor.io'], name: 'dockerRegistry', description: 'dockerRegistry'),
+        choice(choices: ['registry.hub.docker.com', 'phis.harbor.io'], name: 'dockerRegistry', description: 'dockerRegistry'),
         choice(choices: ['dockerhub-bless2k'], name: 'registryCredential', description: 'registryCredential'),
         choice(choices: ['bless2k/pqm-ap'], name: 'dockerImageName', description: 'dockerImageName')
 ])])
 
 pipeline {
-    agent any
+    agent {
+        node {
+            label "pod-kaniko"
+        }
+    }
 
     stages {
         stage('Preparation') { // for display purposes
@@ -19,33 +23,23 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
+        stage('Build Package') {
             steps {
                 checkout scm
             }
-        }
 
-        stage('Build Package') {
             steps {
-                withMaven(
-                        maven: 'MavenM3'
-                ) {
+                container("container-maven") {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
                 }
             }
         }
 
         stage('Build Docker Image') {
-            agent {
-                node {
-                    label "pod-kaniko"
-                }
-            }
-
             steps {
                 container("container-kaniko") {
-                    sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
-                    sh '/kaniko/executor -f ./Dockerfile --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}'
+                    sh 'mkdir -p /kaniko/.docker'
+                    sh '/kaniko/executor -f `pwd`/Dockerfile --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}'
                     // sh '/kaniko/executor --context=git://github.com/repository/project.git  --destination=docker.io/repository/image:tag --insecure --skip-tls-verify  -v=debug'
                 }
             }
