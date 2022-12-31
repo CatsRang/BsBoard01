@@ -6,17 +6,15 @@ properties([parameters([
 ])])
 
 pipeline {
-    agent {
-        node {
-            label "pod-template-test01"
-        }
-    }
 
     stages {
         stage('Preparation') { // for display purposes
             steps {
                 echo "> Current workspace : ${workspace}"
                 echo "> activeProfile : ${activeProfile}"
+                echo "> dockerRegistry : ${dockerRegistry}"
+                echo "> registryCredential : ${registryCredential}"
+                echo "> dockerImageName : ${dockerImageName}"
             }
         }
 
@@ -37,9 +35,16 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent {
+                node {
+                    label "pod-kaniko"
+                }
+            }
+
             steps {
-                container("container-test01") {
-                    sh "echo Hello from $POD_CONTAINER"
+                container("container-kaniko") {
+                    sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}'
+                    // sh '/kaniko/executor --context=git://github.com/repository/project.git  --destination=docker.io/repository/image:tag --insecure --skip-tls-verify  -v=debug'
                 }
             }
         }
