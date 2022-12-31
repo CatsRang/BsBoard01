@@ -20,22 +20,6 @@ pipeline {
             }
         }
 
-        /*
-        stage('Build Package') {
-            withMaven(
-                    maven: 'MavenM3'
-            ) {
-                sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
-            }
-        }
-         */
-
-        /*
-        stage('Archive') {
-            archiveArtifacts artifacts: '**/target/*.jar'
-        }
-        */
-
         stage('Build Docker Image') {
             container("container-test01") {
                 sh "echo Hello from $POD_CONTAINER"
