@@ -6,8 +6,6 @@ node {
             [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
-    def app
-
     stage('Preparation') { // for display purposes
         echo "Current workspace : ${workspace}"
     }
@@ -28,11 +26,8 @@ node {
         archiveArtifacts artifacts: '**/target/*.jar'
     }
 
-    stage('Build Docker Image') {
-        app = docker.build(dockerImageName)
-    }
-
-    stage('Push Docker Image') {
+    stage('Build & Push Docker Image') {
+        def app = docker.build(dockerImageName)
         docker.withRegistry(dockerRegistry, registryCredential) {
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
