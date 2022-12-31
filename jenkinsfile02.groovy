@@ -2,7 +2,7 @@ properties([parameters([
         choice(choices: ['dev', 'prod'], name: 'activeProfile', description: 'Maven Active Profile'),
         choice(choices: ['registry.hub.docker.com', 'phis.harbor.io'], name: 'dockerRegistry', description: 'dockerRegistry'),
         choice(choices: ['dockerhub-bless2k'], name: 'registryCredential', description: 'registryCredential'),
-        choice(choices: ['bless2k/pqm-ap'], name: 'dockerImageName', description: 'dockerImageName')
+        choice(choices: ['bless2k/pqm-api'], name: 'dockerImageName', description: 'dockerImageName')
 ])])
 
 pipeline {
@@ -45,7 +45,6 @@ pipeline {
                     sh "mkdir -p /kaniko/.docker"
                     sh "cp `pwd`/.docker/config.json /kaniko/.docker"
                     sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
-                    // sh '/kaniko/executor --context=git://github.com/repository/project.git  --destination=docker.io/repository/image:tag --insecure --skip-tls-verify  -v=debug'
                 }
             }
         }
