@@ -6,18 +6,13 @@ node {
             [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
-    stage('Preparation') { // for display purposes
-        echo "Current workspace : ${workspace}"
-    }
-
     stage('Checkout') {
+        echo "******************* Start Building, Current workspace : ${workspace}"
         checkout scm
     }
 
     stage('Build Package') {
-        withMaven(
-                maven: 'MavenM3'
-        ) {
+        withMaven(maven: 'MavenM3') {
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
     }
