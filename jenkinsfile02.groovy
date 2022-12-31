@@ -6,6 +6,7 @@ properties([parameters([
 ])])
 
 pipeline {
+    agent any
 
     stages {
         stage('Preparation') { // for display purposes
