@@ -9,11 +9,15 @@ pipeline {
 
     stages {
         stage('Preparation') { // for display purposes
-            echo "Current workspace : ${workspace}"
+            steps{
+                echo "Current workspace : ${workspace}"
+            }
         }
 
         stage('Checkout') {
-            checkout scm
+            steps {
+                checkout scm
+            }
         }
 
         /*
