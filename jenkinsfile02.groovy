@@ -43,8 +43,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 container("container-kaniko") {
-                    sh 'mkdir -p /kaniko/.docker'
-                    sh '/kaniko/executor -f `pwd`/Dockerfile --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}'
+                    //sh "mkdir -p /kaniko/.docker"
+                    sh "/kaniko/executor -f `pwd`/Dockerfile --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
                     // sh '/kaniko/executor --context=git://github.com/repository/project.git  --destination=docker.io/repository/image:tag --insecure --skip-tls-verify  -v=debug'
                 }
             }
