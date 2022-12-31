@@ -6,8 +6,6 @@ node {
             [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
-    agent any
-
     def app
 
     stage('Preparation') { // for display purposes
