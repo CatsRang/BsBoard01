@@ -23,18 +23,17 @@ pipeline {
             }
         }
 
-        /*
         stage('Checkout') {
             steps {
-                checkout scm
+                container("container-maven") {
+                    checkout scm
+                }
             }
         }
-         */
 
         stage('Build Package') {
             steps {
                 container("container-maven") {
-                    checkout scm
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
                 }
             }
@@ -43,7 +42,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 container("container-kaniko") {
-                    //sh "mkdir -p /kaniko/.docker"
+                    sh "mkdir -p /kaniko/.docker"
+                    sh "cp /home/jenkins/agent/.docker/config.json /kaniko/.docker"
                     sh "/kaniko/executor -f `pwd`/Dockerfile --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
                     // sh '/kaniko/executor --context=git://github.com/repository/project.git  --destination=docker.io/repository/image:tag --insecure --skip-tls-verify  -v=debug'
                 }
