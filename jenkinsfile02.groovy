@@ -23,13 +23,18 @@ pipeline {
             }
         }
 
-        stage('Build Package') {
+        /*
+        stage('Checkout') {
             steps {
                 checkout scm
             }
+        }
+         */
 
+        stage('Build Package') {
             steps {
                 container("container-maven") {
+                    checkout scm
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
                 }
             }
