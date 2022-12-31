@@ -7,7 +7,9 @@ properties([parameters([
 
 pipeline {
     agent {
-        label "pod-kaniko"
+        node {
+            label "pod-kaniko"
+        }
     }
 
     stages {
