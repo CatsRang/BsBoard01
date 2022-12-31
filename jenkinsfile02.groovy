@@ -9,7 +9,7 @@ pipeline {
 
     stages {
         stage('Preparation') { // for display purposes
-            steps{
+            steps {
                 echo "Current workspace : ${workspace}"
             }
         }
@@ -21,8 +21,10 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            container("container-test01") {
-                sh "echo Hello from $POD_CONTAINER"
+            steps {
+                container("container-test01") {
+                    sh "echo Hello from $POD_CONTAINER"
+                }
             }
         }
     }
