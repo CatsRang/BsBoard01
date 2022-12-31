@@ -6,11 +6,7 @@ node {
             [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
-    agent {
-        node {
-            label "pod-template-test01"
-        }
-    }
+    agent any
 
     def app
 
