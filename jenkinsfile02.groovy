@@ -53,7 +53,7 @@ pipeline {
         }
 
         stage('Kubernetes Deploy') {
-            agent none
+            agent any
 
             steps {
                 withKubeConfig([credentialsId: 'kube-secret', serverUrl: "https://192.168.49.2:8443"]) {
