@@ -41,10 +41,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                container("container-kaniko") {
-                    sh "mkdir -p /kaniko/.docker"
-                    sh "cp `pwd`/.docker/config.json /kaniko/.docker"
-                    sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
+                container("container-kaniko", shell: "/busybox/sh") {
+                    withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
+                        sh "mkdir -p /kaniko/.docker"
+                        sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
+//                        sh "cp `pwd`/.docker/config.json /kaniko/.docker"
+                        sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
+                    }
                 }
             }
         }
