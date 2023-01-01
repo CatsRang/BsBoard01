@@ -25,9 +25,7 @@ pipeline {
                 echo "> registryCredential : ${registryCredential}"
                 echo "> dockerImageName : ${dockerImageName}"
 
-//                container("container-maven") {
-                    checkout scm
-//                }
+                checkout scm
             }
         }
 
@@ -46,9 +44,16 @@ pipeline {
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
 //                        sh "cp `pwd`/.docker/config.json /kaniko/.docker"
-                        sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
+                        sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER"
                     }
                 }
+            }
+        }
+
+        stage('Kubernetes Deploy') {
+            withKubeConfig([credentialsId: 'kube-secret']) {
+                sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
+                sh "./kubectl apply -f k8s_deployment.yaml"
             }
         }
     }
