@@ -51,7 +51,6 @@ pipeline {
                         }
                     }
 
-
                     steps {
                         stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
                     }
