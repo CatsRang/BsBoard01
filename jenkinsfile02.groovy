@@ -13,18 +13,14 @@ pipeline {
     }
 
     stages {
-        stage('Preparation') { // for display purposes
+        stage('Checkout') {
             steps {
                 echo "> Current workspace : ${workspace}"
                 echo "> activeProfile : ${activeProfile}"
                 echo "> dockerRegistry : ${dockerRegistry}"
                 echo "> registryCredential : ${registryCredential}"
                 echo "> dockerImageName : ${dockerImageName}"
-            }
-        }
 
-        stage('Checkout') {
-            steps {
                 container("container-maven") {
                     checkout scm
                 }
