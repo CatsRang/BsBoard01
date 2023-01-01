@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Package') {
             steps {
                 container(name: "container-maven") {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage('Build & Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
