@@ -26,6 +26,7 @@ pipeline {
                         echo "> dockerImageName : ${dockerImageName}"
 
                         checkout scm
+                        stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
                     }
                 }
                 stage('Build Package') {
@@ -49,10 +50,6 @@ pipeline {
                                 sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER"
                             }
                         }
-                    }
-
-                    steps {
-                        stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
                     }
                 }
             }
