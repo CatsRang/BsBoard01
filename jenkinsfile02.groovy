@@ -30,7 +30,6 @@ pipeline {
                     }
                 }
 
-                /*
                 stage('Build Package') {
                     steps {
                         container(name: "container-maven") {
@@ -50,7 +49,6 @@ pipeline {
                         }
                     }
                 }
-                 */
             }
         }
 
