@@ -33,7 +33,7 @@ pipeline {
 
         stage('Build Package') {
             steps {
-                container("container-maven") {
+                container(name: "container-maven") {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                container("container-kaniko", shell: "/busybox/sh") {
+                container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
