@@ -56,7 +56,7 @@ pipeline {
             agent none
 
             steps {
-                withKubeConfig([credentialsId: 'kube-secret']) {
+                withKubeConfig([credentialsId: 'kube-secret', serverUrl: "https://192.168.49.2:8443"]) {
                     unstash 'K8S_DEPL'
                     sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
                 }
