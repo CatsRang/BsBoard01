@@ -21,13 +21,13 @@ pipeline {
                 echo "> registryCredential : ${registryCredential}"
                 echo "> dockerImageName : ${dockerImageName}"
 
-                container("container-maven") {
+//                container("container-maven") {
                     checkout scm
-                }
+//                }
             }
         }
 
-        stage('Build Package') {
+        stage('Build') {
             steps {
                 container(name: "container-maven") {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Deploy') {
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
