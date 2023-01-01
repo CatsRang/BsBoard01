@@ -6,17 +6,18 @@ properties([parameters([
 ])])
 
 pipeline {
-    agent {
-        node {
-            label "pod-kaniko"
-        }
-    }
-
     options {
         skipDefaultCheckout(true)
     }
 
     stages {
+        agent {
+            node {
+                label "pod-kaniko"
+            }
+        }
+
+
         stage('Checkout') {
             steps {
                 echo "> Current workspace : ${workspace}"
@@ -48,7 +49,9 @@ pipeline {
                 }
             }
         }
+    }
 
+    stages {
         stage('Kubernetes Deploy') {
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
