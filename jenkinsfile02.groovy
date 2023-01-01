@@ -50,6 +50,11 @@ pipeline {
                             }
                         }
                     }
+
+
+                    steps {
+                        stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
+                    }
                 }
             }
         }
@@ -59,7 +64,7 @@ pipeline {
 
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
-                    sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
+                    unstash 'K8S_DEPL'
                     sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
                 }
             }
