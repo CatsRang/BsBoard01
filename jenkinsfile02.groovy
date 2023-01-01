@@ -51,9 +51,11 @@ pipeline {
         }
 
         stage('Kubernetes Deploy') {
-            withKubeConfig([credentialsId: 'kube-secret']) {
-                sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
-                sh "./kubectl apply -f k8s_deployment.yaml"
+            steps {
+                withKubeConfig([credentialsId: 'kube-secret']) {
+                    sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
+                    sh "./kubectl apply -f k8s_deployment.yaml"
+                }
             }
         }
     }
