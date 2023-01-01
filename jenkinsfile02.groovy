@@ -6,19 +6,16 @@ properties([parameters([
 ])])
 
 pipeline {
+    agent none
+
     options {
         skipDefaultCheckout(true)
     }
 
     stages {
-        agent {
-            node {
-                label "pod-kaniko"
-            }
-        }
-
-
         stage('Checkout') {
+            agent { node { label "pod-kaniko" } }
+
             steps {
                 echo "> Current workspace : ${workspace}"
                 echo "> activeProfile : ${activeProfile}"
@@ -31,6 +28,8 @@ pipeline {
         }
 
         stage('Build Package') {
+            agent { node { label "pod-kaniko" } }
+
             steps {
                 container(name: "container-maven") {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
@@ -39,6 +38,8 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent { node { label "pod-kaniko" } }
+
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
@@ -49,10 +50,10 @@ pipeline {
                 }
             }
         }
-    }
 
-    stages {
         stage('Kubernetes Deploy') {
+            agent none
+
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
                     sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
