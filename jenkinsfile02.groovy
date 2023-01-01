@@ -37,13 +37,12 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Build & Push Docker Image') {
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
-//                        sh "cp `pwd`/.docker/config.json /kaniko/.docker"
                         sh "/kaniko/executor -f `pwd`/Dockerfile --context=`pwd` --insecure --skip-tls-verify --cache=true --destination=$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER"
                     }
                 }
@@ -54,7 +53,7 @@ pipeline {
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
                     sh "sed -i \"s,__IMAGE_NAME__,$dockerRegistry/$dockerImageName:$env.BUILD_NUMBER,\" k8s_deployment.yaml"
-                    sh "./kubectl apply -f k8s_deployment.yaml"
+                    sh "kubectl apply -f k8s_deployment.yaml"
                 }
             }
         }
