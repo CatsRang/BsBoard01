@@ -29,9 +29,8 @@ pipeline {
                         stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
                     }
                 }
-                stage('Build Package') {
-                    agent { node { label "pod-kaniko" } }
 
+                stage('Build Package') {
                     steps {
                         container(name: "container-maven") {
                             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
@@ -40,8 +39,6 @@ pipeline {
                 }
 
                 stage('Build Docker Image') {
-                    agent { node { label "pod-kaniko" } }
-
                     steps {
                         container(name: "container-kaniko", shell: "/busybox/sh") {
                             withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
