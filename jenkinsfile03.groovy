@@ -6,7 +6,7 @@ properties([parameters([
 ])])
 
 pipeline {
-    agent none
+    agent any
 
     options {
         skipDefaultCheckout(true)
@@ -49,8 +49,6 @@ pipeline {
         }
 
         stage('Kubernetes Deploy') {
-            agent any
-
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
                     unstash 'K8S_DEPL'
