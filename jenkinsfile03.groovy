@@ -22,6 +22,7 @@ pipeline {
 
                 checkout scm
                 stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
+                stash includes: 'Dockerfile', name: 'DOCKER_FILE'
             }
         }
 
@@ -37,6 +38,7 @@ pipeline {
         stage('Build Docker Image') {
             agent { node { label "pod-kaniko" } }
             steps {
+                unstash 'DOCKER_FILE'
                 unstash 'APP_JAR'
 
                 container(name: "container-kaniko", shell: "/busybox/sh") {
