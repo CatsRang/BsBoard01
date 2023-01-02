@@ -21,8 +21,6 @@ pipeline {
                 echo "> dockerImageName : ${dockerImageName}"
 
                 checkout scm
-                //stash includes: 'k8s_deployment.yaml, Dockerfile', name: 'K8S_DEPL'
-                stash includes: 'Dockerfile', name: 'DOCKER_FILE'
             }
         }
 
@@ -30,6 +28,8 @@ pipeline {
             steps {
                 withMaven(maven: 'MavenM3') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
+                    //stash includes: 'k8s_deployment.yaml, Dockerfile', name: 'K8S_DEPL'
+                    stash includes: 'Dockerfile', name: 'DOCKER_FILE'
                     stash includes: 'target/BsBoard-*.jar', name: 'APP_JAR'
                 }
             }
