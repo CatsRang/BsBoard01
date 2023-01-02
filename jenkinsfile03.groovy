@@ -29,7 +29,7 @@ pipeline {
             steps {
                 withMaven(maven: 'MavenM3') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
-                    stash includes: 'target/target/BsBoard-*.jar', name: 'APP_JAR'
+                    stash includes: 'target/BsBoard-*.jar', name: 'APP_JAR'
                 }
             }
         }
