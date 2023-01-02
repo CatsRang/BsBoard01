@@ -21,7 +21,7 @@ pipeline {
                 echo "> dockerImageName : ${dockerImageName}"
 
                 checkout scm
-                stash includes: 'k8s_deployment.yaml', name: 'K8S_DEPL'
+                //stash includes: 'k8s_deployment.yaml, Dockerfile', name: 'K8S_DEPL'
                 stash includes: 'Dockerfile', name: 'DOCKER_FILE'
             }
         }
@@ -38,11 +38,9 @@ pipeline {
         stage('Build Docker Image') {
             agent { node { label "pod-kaniko" } }
             steps {
-                unstash 'DOCKER_FILE'
-                unstash 'APP_JAR'
-
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
+                        unstash 'DOCKER_FILE'
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
                         sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify -d ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
@@ -54,7 +52,7 @@ pipeline {
         stage('Kubernetes Deploy') {
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
-                    unstash 'K8S_DEPL'
+                    // unstash 'K8S_DEPL'
                     echo "NODE_NAME = ${env.NODE_NAME}"
                     sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
                     sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
