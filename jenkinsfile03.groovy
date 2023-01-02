@@ -43,7 +43,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
-                        sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache true -d ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
+                        sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify -d ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
                     }
                 }
             }
