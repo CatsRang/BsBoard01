@@ -37,12 +37,13 @@ pipeline {
         stage('Build Docker Image') {
             agent { node { label "pod-kaniko" } }
             steps {
+                unstash 'APP_JAR'
+
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
                         sh "mkdir -p /kaniko/.docker"
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
-                        unstash 'APP_JAR'
-                        sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd`  --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
+                        sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
                     }
                 }
             }
