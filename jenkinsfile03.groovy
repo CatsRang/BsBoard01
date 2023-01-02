@@ -15,7 +15,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "> Current workspace : ${workspace}"
                 echo "> activeProfile : ${activeProfile}"
                 echo "> dockerRegistry : ${dockerRegistry}"
                 echo "> registryCredential : ${registryCredential}"
