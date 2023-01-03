@@ -2,7 +2,7 @@ node {
     properties([[$class: 'ParametersDefinitionProperty', parameterDefinitions: [
             [$class: 'ChoiceParameterDefinition', description: 'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
             [$class: 'StringParameterDefinition', defaultValue: 'phis.harbor.io', description: 'Registry Url. ex) phis.harbor.io  registry.hub.docker.com', name: "dockerRegistry"],
-            [$class: 'StringParameterDefinition', defaultValue: 'phis.harbor.io', description: 'Registry Credential', name: "registryCredential"],
+            [$class: 'StringParameterDefinition', defaultValue: 'cred-harbor-admin', description: 'Registry Credential', name: "registryCredential"],
             [$class: 'StringParameterDefinition', defaultValue: 'bless2k/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
