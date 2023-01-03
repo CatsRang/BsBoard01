@@ -3,7 +3,7 @@ node {
             [$class: 'ChoiceParameterDefinition', description: 'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
             [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Registry Url. ex) phis.harbor.io  registry.hub.docker.com', name: "dockerRegistry"],
             [$class: 'StringParameterDefinition', defaultValue: 'cred-harbor-admin', description: 'Registry Credential', name: "registryCredential"],
-            [$class: 'StringParameterDefinition', defaultValue: 'pqmtest/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
+            [$class: 'StringParameterDefinition', defaultValue: 'registry.hub.docker.com/pqmtest/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
     stage('Checkout') {
@@ -22,13 +22,11 @@ node {
     }
 
     stage('Docker Build') {
-        /*
         def app = docker.build(dockerImageName)
         docker.withRegistry(dockerRegistry, registryCredential) {
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
         }
-         */
     }
 
     stage('Kubernetes Deploy') {
