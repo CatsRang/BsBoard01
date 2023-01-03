@@ -11,7 +11,7 @@ node {
         checkout scm
     }
 
-    stage('Build Package') {
+    stage('Maven Build') {
         withMaven(maven: 'tool-maven') {
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
@@ -21,7 +21,7 @@ node {
         archiveArtifacts artifacts: '**/target/*.jar'
     }
 
-    stage('Build & Push Docker Image') {
+    stage('Docker Build') {
         def app = docker.build(dockerImageName)
         docker.withRegistry(dockerRegistry, registryCredential) {
             app.push("${env.BUILD_NUMBER}")
@@ -30,7 +30,7 @@ node {
     }
 
     stage('Kubernetes Deploy') {
-        withKubeConfig([credentialsId: 'kube-secret']) {
+        withKubeConfig([credentialsId: 'cred-k8s-admin']) {
             sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
             sh "./kubectl apply -f k8s_deployment.yaml"
         }
