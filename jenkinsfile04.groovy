@@ -38,7 +38,7 @@ pipeline {
         stage('Build Docker Image') {
             agent {label "builder-node" }
             steps {
-                container(name: "container-kaniko", shell: "/busybox/sh") {
+                //container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
                         unstash 'DOCKER_FILE'
                         unstash 'APP_JAR'
@@ -46,7 +46,7 @@ pipeline {
                         sh "cp $CONF_KANIKO /kaniko/.docker/config.json"
                         sh "/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify -d ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER}"
                     }
-                }
+                //}
             }
         }
 
