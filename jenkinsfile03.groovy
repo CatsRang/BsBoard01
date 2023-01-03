@@ -28,6 +28,7 @@ pipeline {
             steps {
                 withMaven(maven: 'MavenM3') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
+                    //stash includes: 'k8s_deployment.yaml, Dockerfile', name: 'K8S_DEPL'
                     stash includes: 'Dockerfile', name: 'DOCKER_FILE'
                     stash includes: 'target/*.jar', name: 'APP_JAR'
                 }
@@ -52,6 +53,7 @@ pipeline {
         stage('Kubernetes Deploy') {
             steps {
                 withKubeConfig([credentialsId: 'kube-secret']) {
+                    // unstash 'K8S_DEPL'
                     echo "NODE_NAME = ${env.NODE_NAME}"
                     sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
                     sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
