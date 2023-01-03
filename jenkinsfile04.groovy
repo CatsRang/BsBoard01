@@ -6,7 +6,7 @@ properties([parameters([
 ])])
 
 pipeline {
-    agent any
+    agent {label "Built-In Node"}
 
     options {
         skipDefaultCheckout(true)
