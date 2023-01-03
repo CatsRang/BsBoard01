@@ -3,7 +3,7 @@ node {
             [$class: 'ChoiceParameterDefinition', description: 'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
             [$class: 'StringParameterDefinition', defaultValue: 'http://phis.harbor.io', description: 'Registry Url. ex) phis.harbor.io  registry.hub.docker.com', name: "dockerRegistry"],
             [$class: 'StringParameterDefinition', defaultValue: 'cred-harbor-admin', description: 'Registry Credential', name: "registryCredential"],
-            [$class: 'StringParameterDefinition', defaultValue: 'phis.harbor.io/pqmtest/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
+            [$class: 'StringParameterDefinition', defaultValue: 'pqmtest/pqm-api', description: 'Docker Image Name', name: "dockerImageName"]
     ]]])
 
     stage('Checkout') {
