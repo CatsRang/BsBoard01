@@ -22,17 +22,19 @@ node {
     }
 
     stage('Docker Build') {
+        /*
         def app = docker.build(dockerImageName)
         docker.withRegistry(dockerRegistry, registryCredential) {
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
         }
+         */
     }
 
     stage('Kubernetes Deploy') {
         withKubeConfig([credentialsId: 'cred-k8s-admin']) {
             sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
-            sh "./kubectl apply -f k8s_deployment.yaml"
+            sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
         }
     }
 }
