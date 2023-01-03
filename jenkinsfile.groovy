@@ -23,7 +23,7 @@ node {
 
     stage('Build & Push Docker Image') {
         def app = docker.build(dockerImageName)
-        docker.withRegistry(dockerRegistry, registryCredential) {
+        docker.withRegistry('http:$dockerRegistry', registryCredential) {
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
         }
