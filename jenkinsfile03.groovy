@@ -35,7 +35,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent { node { label "pod-kaniko" } }
+            agent { node { label "builder-node" } }
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
