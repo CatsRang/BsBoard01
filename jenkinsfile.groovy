@@ -12,7 +12,7 @@ node {
     }
 
     stage('Build Package') {
-        withMaven(maven: 'MavenM3') {
+        withMaven(maven: 'tool-maven') {
             sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
         }
     }
