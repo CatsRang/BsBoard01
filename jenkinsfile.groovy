@@ -1,4 +1,4 @@
-node {
+node('built-in') {
     properties([[$class: 'ParametersDefinitionProperty', parameterDefinitions: [
             [$class: 'ChoiceParameterDefinition', description: 'Maven Active Profile', choices: ['dev', 'prd'], name: 'activeProfile'],
             [$class: 'StringParameterDefinition', defaultValue: 'phis.harbor.io', description: 'Registry Url. ex) phis.harbor.io  registry.hub.docker.com', name: "dockerRegistry"],
