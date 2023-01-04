@@ -23,7 +23,7 @@ node {
 
     stage('Docker Build') {
         docker.withRegistry(dockerRegistry, registryCredential) {
-            def app = docker.build(dockerImageName)
+            def app = docker.build(dockerImageName, "--log-level=error")
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
         }
