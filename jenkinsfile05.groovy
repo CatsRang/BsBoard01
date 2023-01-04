@@ -36,7 +36,16 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent {
+                kubernetes {
+                    label "pod-builder"
+                    defaultContainer 'jnlp'
+                }
+            }
+
+            /*
             agent { node { label "pod-builder" } }
+             */
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
