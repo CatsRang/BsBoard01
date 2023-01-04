@@ -48,7 +48,7 @@ pipeline {
              */
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
-                    withCredentials([file(credentialsId: 'secret-kaniko', variable: 'CONF_KANIKO')]) {
+                    withCredentials([file(credentialsId: 'cred-kaniko-harbor', variable: 'CONF_KANIKO')]) {
                         unstash 'DOCKER_FILE'
                         unstash 'APP_JAR'
                         sh "mkdir -p /kaniko/.docker"
