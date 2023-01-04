@@ -26,13 +26,12 @@ node('built-in') {
             def app = docker.build(dockerImageName)
             app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
-
-            //sh "buildah bud -t ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER} ."
         }
     }
 
     stage('Kubernetes Deploy') {
         withKubeConfig([credentialsId: 'cred-k8s-admin']) {
+            // TODO kubectl delete (deployment)
             sh "sed -i \"s,__IMAGE_NAME__,${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
             sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
         }
