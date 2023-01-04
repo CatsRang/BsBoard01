@@ -28,20 +28,16 @@ pipeline {
             steps {
                 withMaven(maven: 'tool-maven') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
-                    stash includes: 'Dockerfile', name: 'DOCKER_FILE'
-                    stash includes: 'target/*.jar', name: 'APP_JAR'
                 }
             }
         }
 
         stage('Docker Build') {
             steps {
-                script {
-                    docker.withRegistry("http://${dockerRegistry}", registryCredential) {
-                        def app = docker.build(dockerImageName)
-                        app.push("${env.BUILD_NUMBER}")
-                        //app.push("latest");
-                    }
+                withRegistry("http://${dockerRegistry}", registryCredential) {
+                    def app = docker.build(dockerImageName)
+                    app.push("${env.BUILD_NUMBER}")
+                    //app.push("latest");
                 }
             }
         }
