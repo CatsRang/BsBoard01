@@ -28,7 +28,6 @@ pipeline {
             steps {
                 withMaven(maven: 'tool-maven') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
-                    //stash includes: 'k8s_deployment.yaml, Dockerfile', name: 'K8S_DEPL'
                     stash includes: 'Dockerfile', name: 'DOCKER_FILE'
                     stash includes: 'target/*.jar', name: 'APP_JAR'
                 }
@@ -36,16 +35,8 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent {
-                kubernetes {
-                    label "pod-builder"
-                    defaultContainer 'jnlp'
-                }
-            }
+            agent { kubernetes { label "pod-builder" defaultContainer 'jnlp' } }
 
-            /*
-            agent { node { label "pod-builder" } }
-             */
             steps {
                 container(name: "container-kaniko", shell: "/busybox/sh") {
                     withCredentials([file(credentialsId: 'cred-kaniko-harbor', variable: 'CONF_KANIKO')]) {
@@ -62,8 +53,7 @@ pipeline {
 
         stage('Kubernetes Deploy') {
             steps {
-                withKubeConfig([credentialsId: 'kube-secret']) {
-                    // unstash 'K8S_DEPL'
+                withKubeConfig([credentialsId: 'cred-k8s-admin']) {
                     echo "NODE_NAME = ${env.NODE_NAME}"
                     sh "sed -i \"s,__IMAGE_NAME__,${dockerImageName}:${env.BUILD_NUMBER},\" k8s_deployment.yaml"
                     sh "/usr/bin/kubectl apply -f k8s_deployment.yaml"
