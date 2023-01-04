@@ -26,17 +26,7 @@ pipeline {
 
         stage('Build Package') {
             steps {
-                withMaven(maven: 'tool-maven', options: [
-                        openTasksPublisher(disabled: true),
-                        dependenciesFingerprintPublisher(disabled: true),
-                        artifactsPublisher(disabled: true),
-                        junitPublisher(disabled: true),
-                        jgivenPublisher(disabled: true),
-                        invokerPublisher(disabled: true),
-                        findbugsPublisher(disabled: true),
-                        concordionPublisher(disabled: true),
-                        pipelineGraphPublisher(disabled: true)
-                ]) {
+                withMaven(maven: 'tool-maven') {
                     sh "mvn -P ${activeProfile} -Dmaven.test.skip=true clean package"
                     stash includes: 'Dockerfile', name: 'DOCKER_FILE'
                     stash includes: 'target/*.jar', name: 'APP_JAR'
