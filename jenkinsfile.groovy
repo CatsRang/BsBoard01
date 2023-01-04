@@ -23,11 +23,11 @@ node('built-in') {
 
     stage('Docker Build') {
         docker.withRegistry("http://${dockerRegistry}", registryCredential) {
-            //def app = docker.build(dockerImageName)
-            //app.push("${env.BUILD_NUMBER}")
+            def app = docker.build(dockerImageName)
+            app.push("${env.BUILD_NUMBER}")
             //app.push("latest");
 
-            sh "buildah bud -t ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER} ."
+            //sh "buildah bud -t ${dockerRegistry}/${dockerImageName}:${env.BUILD_NUMBER} ."
         }
     }
 
