@@ -36,10 +36,12 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                docker.withRegistry("http://${dockerRegistry}", registryCredential) {
-                    def app = docker.build(dockerImageName)
-                    app.push("${env.BUILD_NUMBER}")
-                    //app.push("latest");
+                script {
+                    docker.withRegistry("http://${dockerRegistry}", registryCredential) {
+                        def app = docker.build(dockerImageName)
+                        app.push("${env.BUILD_NUMBER}")
+                        //app.push("latest");
+                    }
                 }
             }
         }
